@@ -2,6 +2,7 @@
 import socket
 import select
 
+
 def main():
     server_socket = socket.socket()
     server_socket.bind(('0.0.0.0', 23))
@@ -16,9 +17,8 @@ def main():
                 client_socket.send(data)
                 massages_to_send.remove(massage)
 
-
     while True:
-        rlist, wlist, xlist = select.select([server_socket] + open_client_sockets,[],[])
+        rlist, wlist, xlist = select.select([server_socket] + open_client_sockets, open_client_sockets, [])
         for current_socket in rlist:
             if current_socket is server_socket:
                 (new_socket, address) = server_socket.accept()
@@ -29,7 +29,7 @@ def main():
                     open_client_sockets.remove(current_socket)
                     print "connection with client closed"
                 else:
-                    massages_to_send.append((current_socket,'hello, ' + data))
+                    massages_to_send.append((current_socket, 'hello, ' + data))
         send_waiting_massages(wlist)
 
 
